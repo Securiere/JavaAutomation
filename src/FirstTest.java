@@ -39,7 +39,7 @@ public class FirstTest {
     }
 
     @Test
-    public void firstTest()
+    public void assertElementHasText()
     {
         WebElement element_to_init_search = driver.findElementByXPath("//*[contains(@text, 'Search Wikipedia')]");
         element_to_init_search.click();
@@ -49,10 +49,10 @@ public class FirstTest {
                 "Cannot find search input"
         );
                 //driver.findElementByXPath("//*[contains(@text, 'Search…')]");
-        element_to_enter_search_line.sendKeys("Java");
+        element_to_enter_search_line.sendKeys("Python");
         waitForElementPresentByXpath(
-                "//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text= 'Object-oriented programming language']",
-                "Cannot find 'Object-oriented programming language' topic searching by 'Java'",
+                "//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text= 'General-purpose programming language']",
+                "Cannot find 'General-purpose programming language' topic searching by 'Python'",
                 15
         );
     }
