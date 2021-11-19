@@ -4,7 +4,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -38,22 +37,37 @@ public class FirstTest {
         driver.quit();
     }
 
+  //  @Test
+ //   public void assertElementHasText() {
+   //     waitForElementByXpathAndClick(
+     //           "//*[contains(@text, 'Search Wikipedia')]",
+       //         "Cannot find 'Search Wikipedia' input",
+         //       5
+        //);
+        //waitForElementByXpathAndSendKeys(
+          //      "//*[contains(@text, 'Search…')]",
+            //    "Python",
+              //  "Cannot find search input",
+                //5
+        //);
+    //}
     @Test
-    public void assertElementHasText()
+    public void testCancelSearch()
     {
-        WebElement element_to_init_search = driver.findElementByXPath("//*[contains(@text, 'Search Wikipedia')]");
-        element_to_init_search.click();
-
-        WebElement element_to_enter_search_line = waitForElementPresentByXpath(
-                "//*[contains(@text, 'Search…')]",
-                "Cannot find search input"
+        waitForElementByIdAndClick(
+                "org.wikipedia:id/search_container",
+                "Cannot find 'Search Wikipedia' input",
+                5
         );
-                //driver.findElementByXPath("//*[contains(@text, 'Search…')]");
-        element_to_enter_search_line.sendKeys("Python");
-        waitForElementPresentByXpath(
-                "//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text= 'General-purpose programming language']",
-                "Cannot find 'General-purpose programming language' topic searching by 'Python'",
-                15
+        waitForElementByIdAndClick(
+                "org.wikipedia:id/search_close_btn",
+                "Cannot find X to cancel search",
+                5
+        );
+        waitForElementNotPresent(
+               "org.wikipedia:id/search_close_btn",
+               "X is still present on the page",
+               5
         );
     }
     private WebElement waitForElementPresentByXpath(String xpath, String error_message, long timeoutInSeconds)
@@ -68,5 +82,41 @@ public class FirstTest {
     private WebElement waitForElementPresentByXpath(String xpath, String error_message)
     {
         return waitForElementPresentByXpath(xpath, error_message, 5);
+    }
+    private WebElement waitForElementByXpathAndClick(String xpath, String error_message, long timeoutInSeconds)
+    {
+        WebElement element = waitForElementPresentByXpath(xpath, error_message, timeoutInSeconds);
+        element.click();
+        return element;
+    }
+    private WebElement waitForElementByXpathAndSendKeys(String xpath, String value, String error_message, long timeoutInSeconds)
+    {
+        WebElement element = waitForElementPresentByXpath(xpath, error_message, timeoutInSeconds);
+        element.sendKeys(value);
+        return element;
+    }
+    private WebElement waitForElementPresentById(String id, String error_message, long timeoutInSeconds)
+    {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(error_message + "\n");
+        By by = By.id(id);
+        return wait.until(
+                ExpectedConditions.presenceOfElementLocated(by)
+        );
+    }
+    private WebElement waitForElementByIdAndClick(String id, String error_message, long timeoutInSeconds)
+    {
+        WebElement element = waitForElementPresentById(id, error_message, timeoutInSeconds);
+        element.click();
+        return element;
+    }
+    private boolean waitForElementNotPresent(String id, String error_message, long timeoutInSeconds)
+    {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+                wait.withMessage(error_message + "\n");
+        By by = By.id(id);
+        return wait.until(
+                ExpectedConditions.invisibilityOfElementLocated(by)
+        );
     }
 }
