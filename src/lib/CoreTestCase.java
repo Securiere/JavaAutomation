@@ -8,6 +8,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.URL;
 
+/* */
 public class CoreTestCase extends TestCase {
 
     protected AppiumDriver driver;

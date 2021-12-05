@@ -5,8 +5,10 @@ import org.junit.Test;
 import ui.ArticlePageObject;
 import ui.SearchPageObject;
 
+/* Тесты связанные с изменением приложения */
 public class ChangeAppConditionTests extends CoreTestCase
 {
+    /* Меняет ориентацию экрана и возвращает обратно */
     @Test
     public void testChangeScreenOrientationOnSearchResults() {
         SearchPageObject SearchPageObject = new SearchPageObject(driver);
@@ -36,6 +38,7 @@ public class ChangeAppConditionTests extends CoreTestCase
         );
     }
 
+    /* Сворачивает и разворачивает приложение */
     @Test
     public void testCheckSearchArticleInBackground() {
         SearchPageObject SearchPageObject = new SearchPageObject(driver);

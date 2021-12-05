@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
+/* Методы */
 public class MainPageObject {
 
     protected AppiumDriver driver;
@@ -122,12 +123,14 @@ public class MainPageObject {
             throw new AssertionError(default_message + " " + error_message);
         }
     }
-/*
-    public void assertElementPresent(By by, String attribute, String error_message, long timeoutInSeconds){
-        WebElement element = driver.findElement(by);
-        Assert.assertTrue (element.getAttribute(attribute) !=null);
+    public void assertElementPresent(By by, String error_messange)
+    {
+        int amountOfElements = getAmountOfElements(by);
+        if (amountOfElements == 0) {
+            String defaultMessage = "A title not present.";
+            throw new AssertionError(defaultMessage + " " + error_messange);
+        }
     }
-*/
     public String waitForElementAndGetAttribute(By by, String attribute, String error_message, long timeoutInSeconds)
     {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);

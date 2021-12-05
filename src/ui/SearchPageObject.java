@@ -11,7 +11,8 @@ public class SearchPageObject extends MainPageObject {
             SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
             SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='{SUBSTRING}']",
             SEARCH_RESULT_ELEMENT = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']",
-            SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text= 'No results found']";
+            SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text= 'No results found']",
+            SEARCH_TITLE_ELEMENT = "//*[@resource-id='org.wikipedia:id/view_page_header_container']/*[@resource-id='org.wikipedia:id/view_page_title_text']";
 
     public SearchPageObject(AppiumDriver driver)
     {
@@ -49,6 +50,7 @@ public class SearchPageObject extends MainPageObject {
         this.waitForElementAndSendKeys(By.xpath(SEARCH_INPUT), search_line, "Cannot find and type into search input", 5);
     }
 
+
     public void waitForSearchResult(String substring)
     {
         String search_result_xpath = getResultSearchElement(substring);
@@ -79,4 +81,10 @@ public class SearchPageObject extends MainPageObject {
     {
         this.assertElementNotPresent(By.xpath(SEARCH_RESULT_ELEMENT), "We supposed not to find any results");
     }
+
+    public void assertTitleIsPresent()
+    {
+        this.assertElementPresent(By.xpath(SEARCH_TITLE_ELEMENT), "Cannot find the title");
+    }
 }
+

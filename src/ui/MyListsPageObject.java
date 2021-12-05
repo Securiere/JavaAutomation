@@ -3,11 +3,13 @@ package ui;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
 
+/* Тут собраны все методы */
 public class MyListsPageObject extends MainPageObject{
 
     public static final String
             FOLDER_BY_NAME_TPL = "//*[@text = '{FOLDER_NAME}']",
-            ARTICLE_BY_TITLE_TPL = "//*[@text='{TITLE}']";
+            ARTICLE_BY_TITLE_TPL = "//*[@text='{TITLE}']",
+            FOLDER_BY_ID_TPL = "org.wikipedia:id/item_title";
 
     private static String getFolderXpathByName(String name_of_folder)
     {
@@ -17,6 +19,11 @@ public class MyListsPageObject extends MainPageObject{
     private static String getSavedArticleXpathByTitle(String article_title)
     {
         return ARTICLE_BY_TITLE_TPL.replace("{TITLE}", article_title);
+    }
+
+    private static String getFolderById(String id)
+    {
+        return FOLDER_BY_ID_TPL.replace("org.wikipedia:id/item_title", id);
     }
 
         public MyListsPageObject(AppiumDriver driver)
@@ -33,6 +40,16 @@ public class MyListsPageObject extends MainPageObject{
                     15
             );
         }
+
+    public void openFolderById(String id)
+    {
+        String folder_name_id = getFolderById(id);
+        this.waitForElementAndClick(
+                By.id(folder_name_id),
+                "Cannot find find folder by id " + id,
+                15
+        );
+    }
 
     public void waitForArticleToAppearByTitle(String article_title)
     {

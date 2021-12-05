@@ -3,6 +3,7 @@ package ui;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
 
+/* Навигация */
 public class NavigationUI extends MainPageObject{
 
     private static final String

@@ -5,8 +5,10 @@ import org.junit.Test;
 import ui.ArticlePageObject;
 import ui.SearchPageObject;
 
+/* Тесты связанные со статьями */
 public class ArticleTests extends CoreTestCase
 {
+    /* Сравнивает заголовок с заданным */
     @Test
     public void testCompareArticleTitle() {
         SearchPageObject SearchPageObject = new SearchPageObject(driver);
@@ -25,6 +27,7 @@ public class ArticleTests extends CoreTestCase
         );
     }
 
+    /* Делает свайп */
     @Test
     public void testSwipeArticle()
     {
