@@ -4,6 +4,9 @@ import lib.CoreTestCase;
 import org.junit.Test;
 import ui.SearchPageObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /* Тесты связанные с поиском */
 public class SearchTests extends CoreTestCase
 {
@@ -84,5 +87,22 @@ public class SearchTests extends CoreTestCase
         SearchPageObject.typeSearchLine("Java");
         SearchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
         SearchPageObject.assertTitleIsPresent();
+    }
+    /* Ex.9 */
+    @Test
+    public void testSearchForTitleAndDescription() {
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+
+        SearchPageObject.initSearchInput();
+        SearchPageObject.typeSearchLine("Java");
+
+        HashMap<String, String> TitleAndNDescription = new HashMap<>();
+        TitleAndNDescription.put("Java", "Island of Indonesia");
+        TitleAndNDescription.put("JavaScript", "Programming language");
+        TitleAndNDescription.put("Java (programming language)", "Object-oriented programming language");
+
+        for (Map.Entry<String, String> kv : TitleAndNDescription.entrySet()) {
+            SearchPageObject.waitForElementByTitleAndDescription(kv.getKey(), kv.getValue());
+        }
     }
 }
