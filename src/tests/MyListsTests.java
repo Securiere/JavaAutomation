@@ -1,70 +1,97 @@
 package tests;
 
 import lib.CoreTestCase;
+import lib.Platform;
 import org.junit.Test;
 import ui.ArticlePageObject;
 import ui.MyListsPageObject;
 import ui.NavigationUI;
 import ui.SearchPageObject;
+import ui.factories.ArticlePageObjectFactory;
+import ui.factories.MyListsPageObjectFactory;
+import ui.factories.NavigationUIFactory;
+import ui.factories.SearchPageObjectFactory;
 
 /* Тесты, связанные с Моим списком */
 public class MyListsTests extends CoreTestCase
 {
+    private static final String name_of_folder = "Learning programming";
+
     /* Сохраняет статью в Мой список и затем удаляет ее оттуда */
     @Test
     public void testSaveFirstArticleToMyList()
     {
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
         SearchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
 
-        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject ArticlePageObject = ArticlePageObjectFactory.get(driver);
         ArticlePageObject.waitForTitleElement();
         String article_title = ArticlePageObject.getArticleTitle();
-        String name_of_folder = "Learning programming";
-        String id = "org.wikipedia:id/item_title";
-        ArticlePageObject.addArticleToMyList(name_of_folder);
+
+        if(Platform.getInstance().isAndroid()) {
+            ArticlePageObject.addArticleToMyList(name_of_folder);
+        } else {
+            ArticlePageObject.addArticlesToMySaved();
+        }
         ArticlePageObject.closeArticle();
 
-        NavigationUI NavigationUI = new NavigationUI(driver);
+        NavigationUI NavigationUI = NavigationUIFactory.get(driver);
         NavigationUI.clickMyLists();
 
-        MyListsPageObject MyListPageObject = new MyListsPageObject(driver);
-        MyListPageObject.openFolderById(id);
+        MyListsPageObject MyListPageObject = MyListsPageObjectFactory.get(driver);
+        MyListPageObject.openFolderByName(name_of_folder);
         MyListPageObject.swipeByArticleToDelete(article_title);
     }
 
     /* Ex. 5 Сохраняет 2 статьи в Мой список, затем удаляет одну из них и убеждается что 2я статья присутствует */
+    /* Ex. 11 */
     @Test
     public void testSaveTwoArticlesToMyList() {
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
         SearchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
 
-        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject ArticlePageObject = ArticlePageObjectFactory.get(driver);
         ArticlePageObject.waitForTitleElement();
         String article_title = ArticlePageObject.getArticleTitle();
-        String name_of_folder = "Learning programming";
-        String id = "org.wikipedia:id/item_title";
-        ArticlePageObject.addArticleToMyList(name_of_folder);
+
+        if(Platform.getInstance().isAndroid()) {
+            ArticlePageObject.addArticleToMyList(name_of_folder);
+        } else {
+            ArticlePageObject.addArticlesToMySaved();
+        }
         ArticlePageObject.closeArticle();
 
+        //Добавляем вторую статью
         SearchPageObject.initSearchInput();
-        SearchPageObject.typeSearchLine("Java");
-        SearchPageObject.clickByArticleWithSubstring("Programming language");
+        SearchPageObject.typeSearchLine("Appium");
+        SearchPageObject.clickByArticleWithSubstring("Appium");
         ArticlePageObject.waitForTitleElement();
-        ArticlePageObject.addMoreArticlesToMyList(name_of_folder);
+        String titleArticleExpected = ArticlePageObject.getArticleTitle();
+
+        if(Platform.getInstance().isAndroid()) {
+            ArticlePageObject.addArticleToMyList(name_of_folder);
+        } else {
+            ArticlePageObject.addArticlesToMySaved();
+        }
         ArticlePageObject.closeArticle();
 
-        NavigationUI NavigationUI = new NavigationUI(driver);
+        NavigationUI NavigationUI = NavigationUIFactory.get(driver);
         NavigationUI.clickMyLists();
 
-        MyListsPageObject MyListPageObject = new MyListsPageObject(driver);
-        MyListPageObject.openFolderById(id);
+        MyListsPageObject MyListPageObject = MyListsPageObjectFactory.get(driver);
+        if (Platform.getInstance().isAndroid()) {
+            MyListPageObject.openFolderByName(name_of_folder);
+        }
         MyListPageObject.swipeByArticleToDelete(article_title);
+        MyListsPageObject.waitForArticleDissapearByTitle(article_title);
+
+
+        assertEquals("Wrong article was deleted", "Appium", titleArticleExpected);
     }
 }

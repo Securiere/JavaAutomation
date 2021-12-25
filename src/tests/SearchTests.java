@@ -3,6 +3,7 @@ package tests;
 import lib.CoreTestCase;
 import org.junit.Test;
 import ui.SearchPageObject;
+import ui.factories.SearchPageObjectFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +15,7 @@ public class SearchTests extends CoreTestCase
     @Test
     public void testSearch()
     {
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
@@ -24,7 +25,7 @@ public class SearchTests extends CoreTestCase
     /* Поиск и его отмена */
     @Test
     public void testCancelSearch() {
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
         SearchPageObject.initSearchInput();
         SearchPageObject.waitForCancelButtonToAppear();
@@ -36,7 +37,7 @@ public class SearchTests extends CoreTestCase
     @Test
     public void testAmountOfNotEmptySearch()
     {
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
         SearchPageObject.initSearchInput();
         String search_line = "Linkin Park Diskography";
@@ -52,7 +53,7 @@ public class SearchTests extends CoreTestCase
     /* Убедиться, что поиск ничего не найдет по запросу */
     @Test
     public void testAmountOfEmptySearch() {
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
         SearchPageObject.initSearchInput();
         String search_line = "jkdfifskfygsdgf";
@@ -65,7 +66,7 @@ public class SearchTests extends CoreTestCase
     @Test
     public void testAmountOfSearch()
     {
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
         SearchPageObject.initSearchInput();
         String search_line = "Java";
@@ -81,7 +82,7 @@ public class SearchTests extends CoreTestCase
     /* Ex. 6 Ищет заголовок статьи. Должен падать */
     @Test
     public void testFindTheTitle() {
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
@@ -91,7 +92,7 @@ public class SearchTests extends CoreTestCase
     /* Ex.9 */
     @Test
     public void testSearchForTitleAndDescription() {
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
@@ -104,5 +105,15 @@ public class SearchTests extends CoreTestCase
         for (Map.Entry<String, String> kv : TitleAndNDescription.entrySet()) {
             SearchPageObject.waitForElementByTitleAndDescription(kv.getKey(), kv.getValue());
         }
+    }
+
+    @Test
+    public void testSearchWordInResultList()
+    {
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
+        String keyWord = "Java";
+        SearchPageObject.initSearchInput();
+        SearchPageObject.typeSearchLine(keyWord);
+        SearchPageObject.assertForWordByResultsSearch(keyWord);
     }
 }

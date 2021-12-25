@@ -1,15 +1,17 @@
 package ui;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
 import org.openqa.selenium.By;
 
 /* Тут собраны все методы */
-public class MyListsPageObject extends MainPageObject{
+abstract public class MyListsPageObject extends MainPageObject{
 
-    public static final String
-            FOLDER_BY_NAME_TPL = "xpath://*[@text = '{FOLDER_NAME}']",
-            ARTICLE_BY_TITLE_TPL = "xpath://*[@text='{TITLE}']",
-            FOLDER_BY_ID_TPL = "id:org.wikipedia:id/item_title";
+    protected static String
+            FOLDER_BY_NAME_TPL,
+            ARTICLE_BY_TITLE_TPL,
+            SEARCH_RESULT_ELEMENTS_IN_MY_LIST;
+            //FOLDER_BY_ID_TPL = "id:org.wikipedia:id/item_title";
 
     private static String getFolderXpathByName(String name_of_folder)
     {
@@ -21,10 +23,10 @@ public class MyListsPageObject extends MainPageObject{
         return ARTICLE_BY_TITLE_TPL.replace("{TITLE}", article_title);
     }
 
-    private static String getFolderById(String id)
+/*    private static String getFolderById(String id)
     {
         return FOLDER_BY_ID_TPL.replace("org.wikipedia:id/item_title", id);
-    }
+    }*/
 
         public MyListsPageObject(AppiumDriver driver)
         {
@@ -41,7 +43,7 @@ public class MyListsPageObject extends MainPageObject{
             );
         }
 
-    public void openFolderById(String id)
+    /*public void openFolderById(String id)
     {
         String folder_name_id = getFolderById(id);
         this.waitForElementAndClick(
@@ -49,7 +51,7 @@ public class MyListsPageObject extends MainPageObject{
                 "Cannot find find folder by id " + id,
                 15
         );
-    }
+    }*/
 
     public void waitForArticleToAppearByTitle(String article_title)
     {
@@ -71,6 +73,26 @@ public class MyListsPageObject extends MainPageObject{
                     article_xpath,
                     "Cannot find saved article"
             );
+            if(Platform.getInstance().isIOS()) {
+                this.clickElementToTheRightUpperCorner(article_xpath, "Cannot find saved article");
+            }
             this.waitForArticleToDisappearByTitle(article_title);
         }
+
+    //Подсчет количества статей в Избранном
+    public int getAmountOfFoundArticlesInMyList()
+    {
+        this.waitForElementPresent(
+                SEARCH_RESULT_ELEMENTS_IN_MY_LIST,
+                "Cannot find any element by the request",
+                15);
+
+        return this.getAmountOfElements(SEARCH_RESULT_ELEMENTS_IN_MY_LIST);
+    }
+    public static void waitForArticleDissapearByTitle(String article_title){
+        String article_xpath = getSavedArticleXpathByTitle(article_title);
+        this.waitForElementNotPresent(article_xpath,
+                "Saved article is still present with title "+ article_title,
+                5);
+    }
 }

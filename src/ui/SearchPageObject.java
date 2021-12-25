@@ -1,19 +1,25 @@
 package ui;
 
 import io.appium.java_client.AppiumDriver;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 
-public class SearchPageObject extends MainPageObject {
+abstract public class SearchPageObject extends MainPageObject {
 
-    private static final String
-            SEARCH_INIT_ELEMENT = "xpath://*[contains(@text, 'Search Wikipedia')]",
-            SEARCH_INPUT = "xpath://*[contains(@text, 'Search…')]",
-            SEARCH_CANCEL_BUTTON = "id:org.wikipedia:id/search_close_btn",
-            SEARCH_RESULT_BY_SUBSTRING_TPL = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='{SUBSTRING}']",
-            SEARCH_ARTICLE_FOR_TITLE_AND_DESCRIPTION = "xpath://android.widget.LinearLayout[*[@text='{SUBSTRING_TITLE}'] and *[@text='{SUBSTRING_DESC}']]",
-            SEARCH_RESULT_ELEMENT = "xpath://*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']",
-            SEARCH_EMPTY_RESULT_ELEMENT = "xpath://*[@text= 'No results found']",
-            SEARCH_TITLE_ELEMENT = "xpath://*[@resource-id='org.wikipedia:id/view_page_header_container']/*[@resource-id='org.wikipedia:id/view_page_title_text']";
+    protected static String
+            SEARCH_INIT_ELEMENT,
+            SEARCH_INPUT,
+            SEARCH_CANCEL_BUTTON,
+            SEARCH_RESULT_BY_SUBSTRING_TPL,
+            SEARCH_ARTICLE_FOR_TITLE_AND_DESCRIPTION,
+            SEARCH_RESULT_ELEMENT,
+            SEARCH_EMPTY_RESULT_ELEMENT,
+            SEARCH_TITLE_ELEMENT,
+            SEARCH_RESULT_CONTAINER;
 
     public SearchPageObject(AppiumDriver driver)
     {
@@ -104,6 +110,22 @@ public class SearchPageObject extends MainPageObject {
                 searchResultXpath,
                 "Cannot find element in search result by title and description \n" + searchResultXpath,
                 10);
+    }
+
+    public void assertForWordByResultsSearch (String keyWord)
+    {
+        List<WebElement> elementList = this.waitForElementsPresent(
+                SEARCH_RESULT_CONTAINER,
+                "List of elements is empty",
+                5
+        );
+
+        for (WebElement webElement : elementList)
+        {
+            String elementAttribute = webElement.getAttribute("text");
+            System.out.println(elementAttribute);
+            assertTrue("Search result doesn't contain " + keyWord,elementAttribute.contains(keyWord));
+        }
     }
 }
 
